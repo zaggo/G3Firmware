@@ -40,7 +40,8 @@ ExtruderBoard::ExtruderBoard() :
 		platform_thermistor(PLATFORM_PIN,1),
 		extruder_heater(extruder_thermistor,extruder_element,SAMPLE_INTERVAL_MICROS_THERMISTOR,eeprom::EXTRUDER_PID_P_TERM),
 		platform_heater(platform_thermistor,platform_element,SAMPLE_INTERVAL_MICROS_THERMISTOR,eeprom::HBP_PID_P_TERM),
-		using_platform(true)
+		using_platform(true),
+		using_zProbe(true)
 {
 }
 
@@ -64,13 +65,14 @@ void pwmBOn(bool on) {
 
 void ExtruderBoard::reset() {
 	initExtruderMotor();
+
 	// Timer 1 is for microsecond-level timing.
 	// CTC mode, interrupt on OCR1A, no prescaler
 	TCCR1A = 0x00;
-	TCCR1B = 0x09;
+	TCCR1B = (1<<WGM12)|(1<<CS10); // 0x09; CS10 = No prescaling
 	TCCR1C = 0x00;
 	OCR1A = INTERVAL_IN_MICROSECONDS * 16;
-	TIMSK1 = 0x02; // turn on OCR1A match interrupt
+	TIMSK1 = (1<<OCIE1A);// 0x02; // turn on OCR1A match interrupt
 	TIMSK2 = 0x00; // turn off channel A PWM by default
 	// TIMER2 is used to PWM mosfet channel B on OC2A, and channel A on
 	// PC1 (using the OC2B register).
@@ -126,6 +128,8 @@ micros_t ExtruderBoard::getCurrentMicros() {
 /// Run the extruder board interrupt
 void ExtruderBoard::doInterrupt() {
 	micros += INTERVAL_IN_MICROSECONDS;
+	if(using_zProbe)
+		zprobe.doInterrupt(micros/*getCurrentMicros()*/);
 }
 
 void ExtruderBoard::setFan(bool on) {
@@ -146,6 +150,10 @@ void ExtruderBoard::indicateError(int errorCode) {
 
 void ExtruderBoard::setUsingPlatform(bool is_using) {
 	using_platform = is_using;
+}
+
+void ExtruderBoard::setUsingZProbe(bool is_using) {
+	using_zProbe = is_using;
 }
 
 void ExtruderBoard::setUsingRelays(bool is_using) {

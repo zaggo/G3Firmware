@@ -52,6 +52,10 @@
 // Platform thermistor analog pin
 #define PLATFORM_PIN    6
 
+// Servo Pin
+#define HAS_Z_PROBE		1
+#define Z_PROBE_PIN		Pin(PortB,1)
+
 // Fan configuration
 #define HAS_FAN				1
 #define FAN_ENABLE_PIN		Pin(PortB,4)

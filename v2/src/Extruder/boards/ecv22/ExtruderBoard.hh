@@ -23,6 +23,7 @@
 #include "Thermistor.hh"
 #include "HeatingElement.hh"
 #include "Heater.hh"
+#include "ZProbe.hh"
 
 // Definition of the extruder heating element
 class ExtruderHeatingElement : public HeatingElement {
@@ -42,6 +43,7 @@ public:
 
 	Heater& getExtruderHeater() { return extruder_heater; }
 	Heater& getPlatformHeater() { return platform_heater; }
+	ZProbe& getZProbe() { return zprobe; }
 	void setMotorSpeed(int16_t speed);
 	void setFan(bool on);
 	void setValve(bool on);
@@ -58,6 +60,7 @@ public:
 	bool isUsingPlatform() { return using_platform; }
 	void setUsingPlatform(bool is_using);
 	void setUsingRelays(bool is_using);
+	void setUsingZProbe(bool is_using);
 private:
 	Thermistor extruder_thermistor;
 	Thermistor platform_thermistor;
@@ -66,8 +69,14 @@ private:
 	Heater extruder_heater;
 	Heater platform_heater;
 	bool using_platform;
+	ZProbe zprobe;
+	bool using_zProbe;
+	
 	/// Microseconds since board initialization
 	volatile micros_t micros;
+	
+	
+	
 	ExtruderBoard();
 	static ExtruderBoard extruderBoard;
 };

@@ -144,6 +144,14 @@ bool processQueryPacket(const InPacket& from_host, OutPacket& to_host) {
 			to_host.append8(RC_OK);
 			to_host.append16(board.getPlatformHeater().get_set_temperature());
 			return true;
+		case SLAVE_CMD_ENGAGE_Z_PROBE:
+			board.getZProbe().engage((bool)from_host.read8(2));
+			to_host.append8(RC_OK);
+			return true;
+		case SLAVE_CMD_ADJUST_Z_PROBE:
+			board.getZProbe().angleAdjust(from_host.read8(2));
+			to_host.append8(RC_OK);
+			return true;
 		}
 	}
 	return false;

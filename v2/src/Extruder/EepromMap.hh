@@ -56,7 +56,9 @@ enum {
 	HBRIDGE_STEPPER			= 1 << 8,
 	EXTERNAL_STEPPER		= 1 << 9,
 	RELAY_BOARD				= 1 << 10,
-	MK5_HEAD				= 1 << 11
+	MK5_HEAD				= 1 << 11,
+	
+	Z_PROBE					= 1 << 12
 };
 
 /// Backoff stop time, in ms: 2 bytes
@@ -75,13 +77,16 @@ const static uint16_t EXTRUDER_PID_I_TERM		= 0x000E;
 /// Extruder PID D term, in fixed-point: 2 bytes
 const static uint16_t EXTRUDER_PID_D_TERM		= 0x0010;
 
-
 /// HBP PID P term, in fixed-point: 2 bytes
 const static uint16_t HBP_PID_P_TERM			= 0x0012;
 /// HBP PID I term, in fixed-point: 2 bytes
 const static uint16_t HBP_PID_I_TERM			= 0x0014;
 /// HBP PID D term, in fixed-point: 2 bytes
 const static uint16_t HBP_PID_D_TERM			= 0x0016;
+
+/// ZProbe positions, 1 byte each
+const static uint16_t Z_PROBE_DISENGAGE_ANGLE	= 0x0018;
+const static uint16_t Z_PROBE_ENGAGE_ANGLE		= 0x0019;
 
 const static uint16_t THERM_R0_OFFSET			= 0x00;
 const static uint16_t THERM_T0_OFFSET			= 0x04;
@@ -93,6 +98,7 @@ const static uint16_t THERM_TABLE_0             = 0x00f0;
 
 /// Thermistor table 1
 const static uint16_t THERM_TABLE_1   			= 0x0170;
+
 
 void init();
 
